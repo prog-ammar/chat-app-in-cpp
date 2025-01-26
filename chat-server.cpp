@@ -52,6 +52,7 @@ class makeServer{
     {
         cout<<"Listening At "<<ip<<":"<<port<<endl;
         int l=listen(server,1);
+        cout<<"Connection Established";
         error_check(l);
         AcceptConnection();
     }
