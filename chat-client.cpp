@@ -3,6 +3,7 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <cstring>
 
 using namespace std;
 
@@ -31,15 +32,17 @@ class makeClient
   }
   void send_recv()
   {
-      // char buffer[4096];
-      // int r=recv(server,buffer,4096,0);
-      // cout<<buffer<<endl; 
+      
       string str;
       while(str!="exit")
       {
         cout<<"Enter : ";
         getline(cin,str);
         int r=send(server,str.c_str(),sizeof(str),0);
+        char buffer[4096];
+        memset(buffer, 0, sizeof(buffer));
+        r=recv(server,buffer,4096,0);
+        cout<<buffer<<endl; 
       }
   }
 
