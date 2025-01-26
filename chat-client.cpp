@@ -33,14 +33,19 @@ class makeClient
   {
     int r;
     char buffer[4096];
-    cout<<"Enter : ";
-    cin.getline(buffer, sizeof(buffer));
     do
     {
-        r=send(client,buffer,4096,0);
-    } while(r!=-1);
+        r=recv(client,buffer,4096,0);
+        cout<<buffer;
+    } while(true);
     
   }
+
+  ~makeClient()
+    {
+     close(server);
+     close(client);
+    }
 };
 
 int main()
