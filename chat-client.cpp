@@ -31,14 +31,9 @@ class makeClient
   }
   void send_recv()
   {
-    int r;
-    char buffer[4096];
-    do
-    {
-        r=recv(client,buffer,4096,0);
-        cout<<buffer;
-    } while(true);
-    
+      char buffer[4096];
+      int r=recv(server,buffer,4096,0);
+      cout<<buffer<<endl; 
   }
 
   ~makeClient()
