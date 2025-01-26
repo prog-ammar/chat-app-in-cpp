@@ -14,6 +14,7 @@ class makeServer{
     int port;
     int server;
     int client;
+    int clientsocket;
 
     makeServer(string address,int portt)
     {
@@ -61,22 +62,20 @@ class makeServer{
 
     void AcceptConnection()
     {
-        struct sockaddr_in client;
-        socklen_t length=sizeof(client);
-        int clientsocket=accept(server,(struct sockaddr*)&client,&length);
-        error_check(clientsocket);
+        struct sockaddr_in clientadd;
+        socklen_t length=sizeof(clientadd);
+        client=accept(server,(struct sockaddr*)&clientadd,&length);
+        error_check(client);
         recivingData();
     }
 
     void recivingData()
     {
         char output[4096];
-        string sending;
-        cout<<"Enter : ";
-        getline(cin,sending);
-
+        char sending[3]="hi";
         int r;
-        r=send(client,sending.c_str(),sending.length(),0);
+        r=send(client,sending,sizeof(sending),0);
+        error_check(r);
     }
 
     ~makeServer()
