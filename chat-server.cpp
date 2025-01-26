@@ -3,6 +3,8 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <cstring>
+#include <thread>
 
 using namespace std;
 
@@ -69,13 +71,18 @@ class makeServer{
     void recivingData()
     {
         char output[4096];
+        string sending;
+        cout<<"Enter : ";
+        getline(cin,sending);
+
         int r;
-        do
-        {
-            r=recv(client,output,4096,0);
-            cout<<output;
-        } while (r!=-1);
-        
+        r=send(client,sending.c_str(),sending.length(),0);
+    }
+
+    ~makeServer()
+    {
+     close(server);
+     close(client);
     }
 
 };
