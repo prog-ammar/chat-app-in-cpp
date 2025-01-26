@@ -1,10 +1,12 @@
-#include<iostream>
+#include <iostream>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
 #include <thread>
+#include <vector>
+
 
 using namespace std;
 
@@ -15,6 +17,7 @@ class makeServer{
     int server;
     int client;
     int clientsocket;
+    vector<int> clients;
 
     makeServer(string address,int portt)
     {
@@ -67,6 +70,7 @@ class makeServer{
         socklen_t length=sizeof(clientadd);
         client=accept(server,(struct sockaddr*)&clientadd,&length);
         error_check(client);
+        clients.push_back(client);
         thread client_thread(&makeServer::recivingData,this,client);
         client_thread.detach();
     }
@@ -84,8 +88,16 @@ class makeServer{
         int r=recv(clientsocket,buffer,4096,0);
         if(r>0)
         cout<<buffer<<endl;
-        error_check(r);
+        sendtoclients(buffer);
       }
+    }
+
+    void sendtoclients(char str[])
+    {
+        for(auto& i: clients)
+        {
+          int s=send(i,str,strlen(str),0);
+        }
     }
 
     ~makeServer()
