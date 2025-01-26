@@ -56,9 +56,8 @@ class makeServer{
 
     void listening()
     {
-        cout<<"Listening At "<<ip<<":"<<port<<endl;
+        cout<<"Chat Server Running At "<<ip<<":"<<port<<endl;
         int l=listen(server,1);
-        cout<<"Connection Established"<<endl;
         error_check(l);
         while(true)
         AcceptConnection();
@@ -82,21 +81,37 @@ class makeServer{
         // int r;
         // r=send(client,sending,sizeof(sending),0);
       char buffer[4096];
+      char name[4096];
+      recv(clientsocket,name,4096,0);
+      string str;
+      string temp1=name;
+      str=temp1+" has joined the chat!";
+      cout<<str<<endl;
+      sendtoclients(str);
       while(buffer!="exit")
       {
         memset(buffer, 0, sizeof(buffer));
         int r=recv(clientsocket,buffer,4096,0);
+        string temp2=buffer;
+        if(temp2=="exit")
+        break;
         if(r>0)
-        cout<<buffer<<endl;
-        sendtoclients(buffer);
+        {
+          str=temp1+" : "+temp2;
+          sendtoclients(str);
+          cout<<str<<endl;
+        }
       }
+      str=temp1+" has left the chat!";
+      cout<<str<<endl;
+      sendtoclients(str);
     }
 
-    void sendtoclients(char str[])
+    void sendtoclients(string str)
     {
         for(auto& i: clients)
         {
-          int s=send(i,str,strlen(str),0);
+          int s=send(i,str.c_str(),str.length(),0);
         }
     }
 
