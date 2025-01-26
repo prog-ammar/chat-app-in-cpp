@@ -32,17 +32,31 @@ class makeClient
   }
   void send_recv()
   {
-      
+      string name;
+      cout<<"ENTER YOUR NAME : ";
+      getline(cin,name);
+      send(server,name.c_str(),sizeof(name),0);
       string str;
+      bool same=true;
       while(str!="exit")
       {
-        cout<<"Enter : ";
+        cout<<"You : ";
         getline(cin,str);
         int r=send(server,str.c_str(),sizeof(str),0);
         char buffer[4096];
         memset(buffer, 0, sizeof(buffer));
         r=recv(server,buffer,4096,0);
-        cout<<buffer<<endl; 
+        for(int i=0;i<name.length();i++)
+        {
+           if(name[i]!=buffer[i])
+           {
+              same=false;
+           }
+        }
+        if(!same)
+        {
+          cout<<buffer<<endl; 
+        }
       }
   }
 
