@@ -4,6 +4,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <cstring>
+#include <thread>
 
 using namespace std;
 
@@ -28,36 +29,47 @@ class makeClient
     server_add.sin_port=htons(port);
     inet_pton(AF_INET,ip.c_str(),&server_add.sin_addr);
     client=connect(server,(struct sockaddr*)&server_add,sizeof(server_add));
-    send_recv();
+    sending();
   }
-  void send_recv()
+  void sending()
   {
       string name;
-      cout<<"ENTER YOUR NAME : ";
+      cout<<"Enter Your Name : ";
       getline(cin,name);
       send(server,name.c_str(),sizeof(name),0);
       string str;
-      bool same=true;
+      thread recive(&makeClient::reciving,this,name);
+      recive.detach();
       while(str!="exit")
       {
         cout<<"You : ";
         getline(cin,str);
         int r=send(server,str.c_str(),sizeof(str),0);
-        char buffer[4096];
-        memset(buffer, 0, sizeof(buffer));
-        r=recv(server,buffer,4096,0);
-        for(int i=0;i<name.length();i++)
-        {
-           if(name[i]!=buffer[i])
-           {
-              same=false;
-           }
-        }
-        if(!same)
-        {
-          cout<<buffer<<endl; 
-        }
       }
+  }
+
+  void reciving(string name)
+  {
+    char buffer[4096];
+    bool same=true;
+    int r;
+    while(true)
+    {
+       memset(buffer, 0, sizeof(buffer));
+       r=recv(server,buffer,4096,0);
+       for(int i=0;i<name.length();i++)
+       {
+          if(name[i]!=buffer[i])
+          {
+            same=false;
+          }
+       }
+       if(!same)
+      {
+          cout<<buffer<<endl; 
+      }  
+    }
+      
   }
 
   ~makeClient()
