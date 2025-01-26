@@ -68,11 +68,12 @@ class makeServer{
     void recivingData()
     {
         char output[4096];
+        int r;
         do
         {
-            int r=recv(client,output,4096,0);
-            int s=send(client,output,4096,0);
-        } while (true);
+            r=recv(client,output,4096,0);
+            cout<<output;
+        } while (r!=-1);
         
     }
 
