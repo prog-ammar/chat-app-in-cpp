@@ -31,9 +31,16 @@ class makeClient
   }
   void send_recv()
   {
-      char buffer[4096];
-      int r=recv(server,buffer,4096,0);
-      cout<<buffer<<endl; 
+      // char buffer[4096];
+      // int r=recv(server,buffer,4096,0);
+      // cout<<buffer<<endl; 
+      string str;
+      while(str!="exit")
+      {
+        cout<<"Enter : ";
+        getline(cin,str);
+        int r=send(server,str.c_str(),sizeof(str),0);
+      }
   }
 
   ~makeClient()
