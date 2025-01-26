@@ -55,8 +55,9 @@ class makeServer{
     {
         cout<<"Listening At "<<ip<<":"<<port<<endl;
         int l=listen(server,1);
-        cout<<"Connection Established";
+        cout<<"Connection Established"<<endl;
         error_check(l);
+        while(true)
         AcceptConnection();
     }
 
@@ -66,16 +67,25 @@ class makeServer{
         socklen_t length=sizeof(clientadd);
         client=accept(server,(struct sockaddr*)&clientadd,&length);
         error_check(client);
-        recivingData();
+        thread client_thread(&makeServer::recivingData,this,client);
+        client_thread.detach();
     }
 
-    void recivingData()
+    void recivingData(int clientsocket)
     {
-        char output[4096];
-        char sending[3]="hi";
-        int r;
-        r=send(client,sending,sizeof(sending),0);
+        // char output[4096];
+        // char sending[3]="hi";
+        // int r;
+        // r=send(client,sending,sizeof(sending),0);
+      char buffer[4096];
+      while(buffer!="exit")
+      {
+        memset(buffer, 0, sizeof(buffer));
+        int r=recv(clientsocket,buffer,4096,0);
+        if(r>0)
+        cout<<buffer<<endl;
         error_check(r);
+      }
     }
 
     ~makeServer()
