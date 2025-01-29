@@ -86,5 +86,11 @@ class makeClient
 
 int main()
 {
-    makeClient server("192.168.1.85",1234);
+    string ip;
+    int port;
+    cout<<"Enter IP of Server : ";
+    getline(cin,ip);
+    cout<<"Enter Port of Server : ";
+    cin>>port;
+    makeClient server(ip,port);
 }
